@@ -6,10 +6,12 @@ import br.com.dynaraoliveira.githubaac.data.local.MeuBancoDeDados
 import br.com.dynaraoliveira.githubaac.data.local.dao.UserDao
 import br.com.dynaraoliveira.githubaac.data.remote.UserWebService
 import br.com.dynaraoliveira.githubaac.data.repositories.UserRepository
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executor
@@ -50,10 +52,20 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRefrofit(gson: Gson): Retrofit {
+    fun provideOkHttp(): OkHttpClient {
+        return OkHttpClient.Builder()
+                .addNetworkInterceptor(StethoInterceptor())
+                .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRefrofit(gson: Gson,
+                        okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl("http://api.github.com")
+                .client(okHttpClient)
                 .build()
     }
 

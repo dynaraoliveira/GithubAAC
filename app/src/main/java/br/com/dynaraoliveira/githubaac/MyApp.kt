@@ -3,6 +3,7 @@ package br.com.dynaraoliveira.githubaac
 import android.app.Application
 import android.app.Activity
 import br.com.dynaraoliveira.githubaac.di.components.DaggerAppComponent
+import com.facebook.stetho.Stetho
 import dagger.android.DispatchingAndroidInjector
 import javax.inject.Inject
 import dagger.android.HasActivityInjector
@@ -16,6 +17,7 @@ class MyApp : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
         this.initDagger()
+        Stetho.initializeWithDefaults(this);
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity>? {
